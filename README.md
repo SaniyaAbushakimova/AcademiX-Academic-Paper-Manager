@@ -10,7 +10,7 @@
 
 `doc/Database Implementation and Indexing.pdf` -- relational database implementation using MySQL cloud database hosted on the Google Cloud Platform. Includes DDL Commands, Table entries, Advanced SQL queries, and Indexing Analysis using EXPLAIN ANALYZE command.
 
-`main/' -- complete web application featuring full CRUD (Create, Read, Update, Delete) operations, keyword search functionality with user input and interface results display, as well as support for Transactions, Stored Procedures, Triggers, and Constraints. See PaperPlex demo below:
+`main/` -- complete web application featuring full CRUD (Create, Read, Update, Delete) operations, keyword search functionality with user input and interface results display, as well as support for Transactions, Stored Procedures, Triggers, and Constraints. See PaperPlex demo below:
 
 
 
