@@ -1,5 +1,7 @@
 # PaperPlex-Academic-Paper-Manager
 
+Project completed on July 30, 2024.
+
 **PaperPlex** research paper managing application focuses on creating a system for managing academic research papers. It will allow users to create and manage personalized reading lists by adding or deleting papers. This application will also incorporate a search functionality, allowing users to find papers based on keywords and filters. Furthermore, users can privately take and save notes linked to specific papers.
 
 ## Content
