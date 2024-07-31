@@ -1,0 +1,126 @@
+---
+import Layout from "../layouts/Layout.astro";
+
+if (Astro.cookies.has("username")) {
+  Astro.cookies.delete("username")
+  return Astro.redirect("/")
+}
+
+async function getUserData() {
+  const response = await fetch(new URL("/api/login", Astro.url));
+  if (!response.ok) {
+    throw new Error('Failed to fetch user data');
+  }
+  return response.json();
+}
+
+let userData = [];
+let error = null;
+
+try {
+  userData = await getUserData();
+} catch (e) {
+  error = e.message;
+}
+---
+
+<Layout>
+  <div class="flex-grow flex flex-col p-8 relative">
+    <div class="flex-grow flex flex-col items-center justify-center">
+      <h1 class="text-6xl font-bold text-red-600 mb-8">PaperPlex</h1>
+      <div class="w-full max-w-md bg-white rounded-lg shadow-md p-8">
+        <h2 class="text-2xl font-bold text-red-600 mb-6 text-center">Login / Sign Up</h2>
+
+        <form id="authForm" class="space-y-6">
+          <div>
+            <label for="username" class="block text-sm font-medium text-gray-700">Username</label>
+            <input type="text" id="username" name="username" required class="mt-1 block w-full px-3 py-2 bg-white border border-red-300 rounded-md text-sm shadow-sm placeholder-gray-400 focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500">
+          </div>
+          <div>
+            <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+            <input type="password" id="password" name="password" required class="mt-1 block w-full px-3 py-2 bg-white border border-red-300 rounded-md text-sm shadow-sm placeholder-gray-400 focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500">
+          </div>
+          <div id="message" class="text-center font-medium"></div>
+          <div>
+            <button type="button" id="loginBtn" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+              Sign in
+            </button>
+          </div>
+          <div>
+            <button type="button" id="signupBtn" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+              Sign up
+            </button>
+          </div>
+        </form>
+      </div>
+      
+      <div class="mt-8 w-full max-w-md">
+        <h3 class="text-xl font-bold text-red-600 mb-4">User Data (FOR DEVELOPMENT ONLY)</h3>
+        {error ? (
+          <p class="text-red-500">{error}</p>
+        ) : (
+          <ul class="bg-white rounded-lg shadow-md p-4">
+            {userData.map((user) => (
+              <li class="py-2 border-b last:border-b-0">
+                <span class="font-medium">{user.username}</span>
+                <span class="text-sm text-gray-500 ml-2">Password: {user.password}</span>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+      
+      <div class="mt-8">
+        <a href="/" class="text-red-600 hover:text-red-800">Back to Home</a>
+      </div>
+    </div>
+  </div>
+</Layout>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const form = document.getElementById('authForm');
+    const loginBtn = document.getElementById('loginBtn');
+    const signupBtn = document.getElementById('signupBtn');
+    const messageDiv = document.getElementById('message');
+
+    function showMessage(message, isError = false) {
+      messageDiv.textContent = message;
+      messageDiv.className = isError 
+        ? 'text-center font-medium text-red-600 mb-4' 
+        : 'text-center font-medium text-green-600 mb-4';
+    }
+
+    async function handleAuth(action) {
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+
+      const formData = new FormData();
+      formData.append('action', action);
+      formData.append('username', username);
+      formData.append('password', password);
+
+      try {
+        const response = await fetch('/api/login', {
+          method: 'POST',
+          body: formData,
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+          window.location.replace("/");
+          showMessage(result.message);
+        } else {
+          showMessage(result.error, true);
+        }
+      } catch (error) {
+        showMessage(`Error: ${error.message}`, true);
+      }
+    }
+
+    loginBtn.addEventListener('click', () => handleAuth('login'));
+    signupBtn.addEventListener('click', () => handleAuth('signup'));
+  });
+</script>
+

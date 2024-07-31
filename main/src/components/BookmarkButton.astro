@@ -1,0 +1,84 @@
+---
+const { paperId, user } = Astro.props;
+---
+
+{user && (
+  <div class="flex items-center">
+    <button id="bookmark-btn" class="hidden bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded mr-2">
+      Bookmark
+    </button>
+    <span id="bookmark-message" class="text-sm italic text-gray-600 ml-2"></span>
+  </div>
+)}
+
+<script define:vars={{ paperId, user }}>
+  document.addEventListener('DOMContentLoaded', () => {
+    if (!user) return; // Exit early if no user is logged in
+
+    const button = document.getElementById('bookmark-btn');
+    const messageSpan = document.getElementById('bookmark-message');
+    let isBookmarked = false;
+
+    async function checkAndUpdateBookmarkStatus() {
+      try {
+        const response = await fetch(`/api/save/${paperId}`);
+        if (response.ok) {
+          const data = await response.json();
+          isBookmarked = data.isBookmarked;
+          updateButtonState();
+          button.classList.remove('hidden'); // Show the button after state is determined
+        } else {
+          console.error('Failed to fetch bookmark status');
+        }
+      } catch (error) {
+        console.error('Error checking bookmark status:', error);
+      }
+    }
+
+    function updateButtonState() {
+      if (isBookmarked) {
+        button.textContent = 'Bookmarked';
+        button.classList.remove('bg-yellow-500', 'hover:bg-yellow-600');
+        button.classList.add('bg-green-500', 'hover:bg-green-600');
+      } else {
+        button.textContent = 'Bookmark';
+        button.classList.remove('bg-green-500', 'hover:bg-green-600');
+        button.classList.add('bg-yellow-500', 'hover:bg-yellow-600');
+      }
+    }
+
+    function showMessage(message, duration = 3000) {
+      messageSpan.textContent = message;
+      setTimeout(() => {
+        messageSpan.textContent = '';
+      }, duration);
+    }
+
+    async function toggleBookmark() {
+      try {
+        const response = await fetch(`/api/save/${paperId}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ paperId }),
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          isBookmarked = data.isBookmarked;
+          updateButtonState();
+          showMessage(isBookmarked ? "Bookmark saved!" : "Bookmark removed!");
+        } else {
+          throw new Error('Failed to toggle bookmark');
+        }
+      } catch (error) {
+        console.error('Error toggling bookmark:', error);
+        showMessage('An error occurred. Please try again.');
+      }
+    }
+
+    button.addEventListener('click', toggleBookmark);
+    checkAndUpdateBookmarkStatus(); // Check status when page loads
+  });
+</script>

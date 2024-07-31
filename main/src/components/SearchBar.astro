@@ -1,0 +1,35 @@
+---
+const { search } = Astro.props;
+---
+
+<form id="searchForm" action="/search" method="get" class="w-full max-w-4xl flex">
+  <div class="flex-grow flex">
+    <input 
+      type="text" 
+      value={search} 
+      id="searchInput" 
+      placeholder="Search for academic papers..." 
+      class="w-full px-4 py-2 text-lg border border-red-300 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-red-600" 
+      required
+    >
+  </div>
+  <button 
+    class="bg-red-600 text-white px-6 py-2 text-lg font-semibold rounded-r-lg hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-600 focus:ring-offset-2 whitespace-nowrap"
+  >
+    Search
+  </button>
+</form>
+
+<script>
+  const searchForm = document.getElementById('searchForm');
+  const searchInput = document.getElementById('searchInput');
+
+  searchForm.addEventListener('submit', function(event) {
+    event.preventDefault();
+    const query = searchInput.value.trim();
+    if (query) {
+      const newUrl = `/search/${query}`;
+      window.location.href = newUrl;
+    }
+  });
+</script>

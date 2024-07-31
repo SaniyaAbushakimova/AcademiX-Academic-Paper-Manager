@@ -1,0 +1,46 @@
+---
+import PaperResult from "../components/PaperResult.astro"
+import LoginButton from "../components/AccountButtons.astro";
+import SearchBar from "../components/SearchBar.astro";
+import Layout from "../layouts/Layout.astro";
+
+const cookie = Astro.request.headers.get("cookie")
+const frontPageResults = await fetch(new URL("/api/recentViewed", Astro.url.origin), {
+  headers: {
+    Cookie: cookie
+  }
+}).then(r => r.json())
+const userCookie = Astro.cookies.get("username")
+const user = userCookie ? userCookie.value : ""
+
+function truncateString(str, maxLength) {
+  	return str.length > maxLength ? str.slice(0, maxLength) + '...' : str;
+}
+---
+
+<Layout>
+  <div class="flex-grow flex flex-col p-8 relative">
+    <LoginButton user={user}/>
+      <div class="flex-grow flex flex-col items-center justify-top">
+        <h1 class="text-6xl font-bold text-red-600 mb-8">PaperPlex</h1>
+          <div class="w-full max-w-2xl mx-auto">
+            <SearchBar/>
+          </div>
+        <h3 class="text-3xl mt-6 font-bold text-red-600">Recently Viewed Papers</h3>
+      </div>
+      <div class="max-w-2xl mx-auto mt-4">
+        {frontPageResults.map((res) => (
+          <PaperResult
+            paperId={res.paperId}
+            title={res.title}
+            authors={truncateString(res.authors, 300)}
+            comments={truncateString(res.comments, 500)}
+            abstract={truncateString(res.abstract, 1000)}
+            tags={res.tags.split(" ")}
+            date={res.date}
+            views={res.views}
+          />
+        ))}
+      </div>
+  </div>
+</Layout>

@@ -1,0 +1,56 @@
+---
+import 'katex/dist/katex.min.css';
+import katex from 'katex';
+
+interface Props {
+  paperId: BigInt;
+  title: string;
+  authors: string;
+  comments: string;
+  abstract: string;
+  tags: string[];
+  date: string;
+  views: BigInt;
+}
+
+const { paperId, title, authors, comments, abstract, tags, date, views } = Astro.props;
+
+function renderLatex(text) {
+  return text.replace(/\$\$(.*?)\$\$|\$(.*?)\$/g, (match, p1, p2) => {
+    const tex = p1 || p2;
+    try {
+      return katex.renderToString(tex, { throwOnError: false, displayMode: !!p1 });
+    } catch (e) {
+      console.error('KaTeX error:', e);
+      return match; // Return the original string if rendering fails
+    }
+  });
+}
+
+const renderedTitle = renderLatex(title);
+const renderedAbstract = renderLatex(abstract);
+---
+
+<div class="bg-white shadow-md rounded-lg my-2 overflow-hidden border border-gray-200">
+  <div class="p-6">
+    <h2 class="text-xl font-bold text-red-600 mb-2">
+      <a href={`/paper/${paperId}`} class="hover:underline" set:html={renderedTitle}></a>
+    </h2>
+    <p class="text-sm text-gray-600 mb-4">
+      <span class="font-semibold">Authors:</span> {authors}
+    </p>
+    <p class="text-sm text-gray-600 mb-4">
+      <span class="font-semibold">Comments:</span> {comments}
+    </p>
+    <p class="text-gray-700 mb-4" set:html={renderedAbstract}></p>
+    <div class="flex justify-between items-center">
+      <div class="space-x-2">
+        {tags.map((tag) => (
+          <span class="inline-block bg-red-100 text-red-700 px-2 py-1 rounded-full text-xs">
+            {tag}
+          </span>
+        ))}
+      </div>
+    </div>
+  </div>
+</div>
