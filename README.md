@@ -4,10 +4,12 @@
 
 ## Content
 
-`doc/Project Description.pdf` -- detailed project description with Usefulness, Realness, and Functionality.
-`doc/Database Design.pdf` -- 
-`doc/Database Implementation and Indexing.pdf` -- 
+`doc/Project Description.pdf` -- detailed project description including Usefulness, Realness, and Functionality. \
+`doc/Database Design.pdf` -- conceptual design of the project database including UML Diagram, Functional Dependencies, Minimal Basis, BCNF/3NF Compliance, and Relational Schema. \
+`doc/Database Implementation and Indexing.pdf` -- relational database implementation using MySQL cloud database hosted on the Google Cloud Platform. Includes DDL Commands, Table entries, Advanced SQL queries, and Indexing Analysis using EXPLAIN ANALYZE command.
 
-`main/' -- web application (front-end and back-end) components, see PaperPlex demo below: 
+`main/' -- complete web application featuring full CRUD (Create, Read, Update, Delete) operations, keyword search functionality with user input and interface results display, as well as support for Transactions, Stored Procedures, Triggers, and Constraints. See PaperPlex demo below:
+
+
 
 
