@@ -14,7 +14,7 @@ Project completed on July 30, 2024.
 
 `main/` -- complete web application featuring full CRUD (Create, Read, Update, Delete) operations, keyword search functionality with user input and interface results display, as well as support for Transactions, Stored Procedures, Triggers, and Constraints. 
 
-See PaperPlex demo below:
+See AcademiX demo below:
 
 
 
