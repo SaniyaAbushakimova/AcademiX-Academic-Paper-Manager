@@ -16,11 +16,9 @@ Project completed on July 30, 2024.
 
 See AcademiX demo below:
 
-*All user data featured in this demo are entirely fictional.*
-
 https://github.com/user-attachments/assets/80af99c5-f78f-46e4-bd42-fa0a24627603
 
-
+*All user data featured in this demo are entirely fictional.*
 
 
 
